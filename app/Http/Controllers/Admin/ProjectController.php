@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProjectRequest;
+use App\Http\Requests\UpsertProjectRequest;
 use App\Models\Project;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -22,9 +24,9 @@ class ProjectController extends Controller
         return view("admin.projects.create");
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(UpsertProjectRequest $request): RedirectResponse
     {
-        $data = $request->all();
+        $data = $request->validated();
 
         $data["slug"] = $this->generateSlug($data["title"]);
 
@@ -40,18 +42,18 @@ class ProjectController extends Controller
         return view("admin.projects.show", compact("project"));
     }
 
-    public function edit($slug): View
+    public function edit(string $slug): View
     {
         $project = Project::where("slug", $slug)->first();
 
         return view("admin.projects.edit", compact("project"));
     }
 
-    public function update(Request $request, $slug)
+    public function update(UpsertProjectRequest $request, string $slug): RedirectResponse
     {
         $project = Project::where("slug", $slug)->first();
 
-        $data = $request->all();
+        $data = $request->validated();
 
         if ($data["title"] !== $project->title) {
             $data["slug"] = $this->generateSlug($data["title"]);
@@ -61,7 +63,7 @@ class ProjectController extends Controller
         return redirect()->route("admin.projects.index");
     }
 
-    public function destroy($slug)
+    public function destroy(string $slug): RedirectResponse
     {
         $project = Project::where("slug", $slug)->first();
 
@@ -70,7 +72,7 @@ class ProjectController extends Controller
         return redirect()->route("admin.projects.index");
     }
 
-    protected function generateSlug($title)
+    protected function generateSlug(string $title): string
     {
         $counter = 0;
 
