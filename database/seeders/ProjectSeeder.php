@@ -18,6 +18,7 @@ class ProjectSeeder extends Seeder
             $train = new Project;
 
             $train->title = $faker->word();
+            $train->slug = $faker->word();
             $train->description = $faker->sentence();
             $train->thumb = $faker->imageUrl(640, 480, 'animals', true);
             $train->release_date = $faker->date();

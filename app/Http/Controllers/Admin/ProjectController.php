@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    
+
     public function index(): View
     {
         $projects = Project::all();
@@ -24,56 +24,69 @@ class ProjectController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $data = $request->validate([
-            "title" => "required|string",
-            "description" => "required|string",
-            "thumb" => "nullable|string",
-            "release_date" => "required|date",
-            "link" => "required|string"
-        ]);
+        $data = $request->all();
+
+        $data["slug"] = $this->generateSlug($data["title"]);
 
         $project = Project::create($data);
 
         return redirect()->route("admin.projects.show", $project->title);
     }
 
-    public function show(string $title): View
+    public function show(string $slug): View
     {
-        $project = Project::where("title", $title)->first();
+        $project = Project::where("slug", $slug)->first();
 
         return view("admin.projects.show", compact("project"));
     }
 
-    public function edit(string $title): View
+    public function edit($slug): View
     {
-        $project = Project::where("title", $title)->first();
-        
+        $project = Project::where("slug", $slug)->first();
+
         return view("admin.projects.edit", compact("project"));
     }
 
-    public function update(Request $request, string $title)
+    public function update(Request $request, $slug)
     {
-        $project = Project::where("title", $title)->first();
+        $project = Project::where("slug", $slug)->first();
 
-        $data = $request->validate([
-            "title" => "required|string",
-            "description" => "required|string",
-            "thumb" => "nullable|string",
-            "release_date" => "required|date",
-            "link" => "required|string"
-        ]);
+        $data = $request->all();
 
+        if ($data["title"] !== $project->title) {
+            $data["slug"] = $this->generateSlug($data["title"]);
+        }
         $project->update($data);
 
-        return redirect()->route("admin.projects.show", $project->title);
+        return redirect()->route("admin.projects.index");
     }
 
-    public function destroy(int $id)
+    public function destroy($slug)
     {
-        $project = Project::findOrFail($id);
+        $project = Project::where("slug", $slug)->first();
 
         $project->delete();
 
         return redirect()->route("admin.projects.index");
+    }
+
+    protected function generateSlug($title)
+    {
+        $counter = 0;
+
+        do {
+            if ($counter == 0) {
+                $slug = $title;
+            } else {
+                $slug = $title . "-" . $counter;
+            }
+
+            // cerco se esiste già un elemento con questo slug
+            $alreadyExists = Project::where("slug", $slug)->first();
+
+            $counter++;
+        } while ($alreadyExists);
+
+        return $slug;
     }
 }

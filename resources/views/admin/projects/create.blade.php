@@ -4,7 +4,11 @@
         <div class="row justify-content-center">
             <div class="col-8">
 
-                <form action="">
+                <h1 class="my-3">Crea un nuovo progetto</h1>
+
+                <form action="{{ route('admin.projects.store') }}" method="post">
+                    @csrf
+
                     {{-- title --}}
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Project's Title</label>
@@ -14,7 +18,7 @@
                     {{-- description --}}
                     <div class="mb-3">
                         <label for="exampleFormControlTextarea1" class="form-label">Project's Description</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description"></textarea>
                     </div>
 
                     {{-- thumb --}}
