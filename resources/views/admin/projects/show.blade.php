@@ -17,7 +17,7 @@
                     </div>
 
                     {{-- thumb --}}
-                    <img class="rounded-3" src="{{ $project->thumb }}" alt="" width="100%">
+                    <img class="rounded-3" src="{{ asset('/storage/' . $project->thumb) }}" alt="" width="100%">
 
                     {{-- description --}}
                     <div class="my-4">

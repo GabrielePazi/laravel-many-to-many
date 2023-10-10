@@ -1,4 +1,4 @@
-<form action="{{ $action }}" method="post">
+<form action="{{ $action }}" method="post" enctype="multipart/form-data">
     @csrf
     @method($method)
 
@@ -25,8 +25,20 @@
     {{-- thumb --}}
     <div class="mb-3">
         <label class="form-label">Project's Image</label>
-        <input name="thumb" class="form-control @error('thumb') is-invalid @enderror"
-            value="{{ old('thumb', $project?->thumb) }}">
+
+        @if($project?->thumb)
+            <div>
+                <img src="
+                    @if (str_contains(asset('/storage/' . $project?->thumb), 'projects')) 
+                        {{ asset('/storage/' . $project?->thumb) }}   
+                    @else
+                        {{ $project?->thumb }} 
+                    @endif " 
+                class="img-thumbnail" width="100px" alt="">
+            </div>
+        @endif
+
+        <input type="file" name="thumb" class="form-control @error('thumb') is-invalid @enderror">
         @error('thumb')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -53,11 +65,11 @@
     </div>
 
     @if ($method == 'post')
-        <div class="w-100 text-end">
+        <div class="w-100 text-end my-3">
             <button class="btn btn-success">Create</button>
         </div>
     @elseif ($method == 'patch')
-        <div class="w-100 text-end">
+        <div class="w-100 text-end my-3">
             <button class="btn btn-warning">Update</button>
         </div>
     @endif

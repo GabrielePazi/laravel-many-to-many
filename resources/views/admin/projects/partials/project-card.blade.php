@@ -1,5 +1,12 @@
 <div class="card" style="width: 30%">
-    <img src="{{ $project->thumb }}" class="card-img-top" alt="...">
+    <img src="
+        @if (str_contains(asset('/storage/' . $project->thumb), 'projects')) 
+            {{ asset('/storage/' . $project->thumb) }}   
+        @else
+            {{ $project->thumb }}
+        @endif
+        "
+        class="card-img-top" style="height: 150px; object-fit:cover" alt="...">
     <div class="card-body">
 
         {{-- title --}}

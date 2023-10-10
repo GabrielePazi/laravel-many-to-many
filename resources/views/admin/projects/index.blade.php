@@ -10,7 +10,7 @@
                 <div class="cards-container d-flex gap-3 flex-wrap">
 
                     @foreach ($projects as $project)
-                        @include('admin.profile.partials.project-card')
+                        @include('admin.projects.partials.project-card')
                     @endforeach
 
                 </div>
