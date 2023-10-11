@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string("slug")->unique();
             $table->text("description");
             $table->string("thumb")->nullable();
+            $table->unsignedBigInteger('type_id')->nullable();
+            $table->foreign('type_id')->references('id')->on("projects");
             $table->date("release_date");
             $table->string("link");
 

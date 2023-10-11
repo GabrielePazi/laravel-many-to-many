@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpsertProjectRequest;
 use App\Models\Project;
+use App\Models\Type;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,7 +25,8 @@ class ProjectController extends Controller
 
     public function create(): View
     {
-        return view("admin.projects.create");
+        $types = Type::all();
+        return view("admin.projects.create", ["types" => $types]);
     }
 
     public function store(UpsertProjectRequest $request): RedirectResponse
@@ -62,7 +64,8 @@ class ProjectController extends Controller
         //search in the database the first element with the same slug as the input
         $project = Project::where("slug", $slug)->first();
 
-        return view("admin.projects.edit", compact("project"));
+        $types = Type::all();
+        return view("admin.projects.create", ["types" => $types]);
     }
 
     public function update(UpsertProjectRequest $request, string $slug): RedirectResponse

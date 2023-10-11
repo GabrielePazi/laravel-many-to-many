@@ -4,8 +4,9 @@
         <div class="row justify-content-center">
             <div class="col-10">
                 <div class="box">
-                    {{-- title --}}
-                    <h1 class="my-3">{{ ucfirst($project->title) }}</h1>
+                    {{-- title and type of th project --}}
+                    <h1 class="my-3">{{ ucfirst($project->title) }}<span
+                            class="badge bg-primary ms-3">{{ $project->type->title }}</span></h1>
 
 
                     <div class="d-flex justify-content-between align-items-center">

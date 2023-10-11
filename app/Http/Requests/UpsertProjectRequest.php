@@ -25,6 +25,7 @@ class UpsertProjectRequest extends FormRequest
             'title' => 'required|string|max:255|min:1',
             'description' => 'required|string|min:1',
             'thumb' => 'nullable|image',
+            'type_id' => 'exists:types,id',
             'release_date' => 'required|date',
             'link' => 'url'
         ];

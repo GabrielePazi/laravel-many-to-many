@@ -44,6 +44,18 @@
         @enderror
     </div>
 
+    {{-- select for the type --}}
+    <div class="mb-3">
+        <label class="form-label">Type</label>
+        <select class="form-select" name="type_id">
+          @foreach ($types as $type)
+          <option value="{{ $type->id }}" {{ $project?->type_id === $type->id ? 'selected' : '' }}>
+            {{$type->title}}
+          </option>
+          @endforeach
+        </select>
+      </div>
+
     {{-- release_date --}}
     <div class="mb-3">
         <label class="form-label">Project's Release Date</label>

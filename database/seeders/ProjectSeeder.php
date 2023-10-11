@@ -15,16 +15,16 @@ class ProjectSeeder extends Seeder
     public function run(Faker $faker): void
     {
         for ($i = 0; $i < 10; $i++) {
-            $train = new Project;
+            $project = new Project;
 
-            $train->title = $faker->word();
-            $train->slug = $faker->word();
-            $train->description = $faker->sentence();
-            $train->thumb = $faker->imageUrl(640, 480, 'animals', true);
-            $train->release_date = $faker->date();
-            $train->link = $faker->url();
+            $project->title = $faker->word();
+            $project->slug = $project->title;
+            $project->description = $faker->sentence();
+            $project->thumb = $faker->imageUrl(640, 480, 'animals', true);
+            $project->release_date = $faker->date();
+            $project->link = $faker->url();
 
-            $train->save();
+            $project->save();
         }
     }
 }
