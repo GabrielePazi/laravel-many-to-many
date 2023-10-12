@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpsertProjectRequest;
 use App\Models\Project;
+use App\Models\Technology;
 use App\Models\Type;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -25,8 +26,12 @@ class ProjectController extends Controller
 
     public function create(): View
     {
+        //searches in the table of the types all the records
         $types = Type::all();
-        return view("admin.projects.create", ["types" => $types]);
+
+        //searches in the table of the technologies all the records
+        $technologies = Technology::all();
+        return view("admin.projects.create", compact('types'), compact('technologies'));
     }
 
     public function store(UpsertProjectRequest $request): RedirectResponse
@@ -48,6 +53,10 @@ class ProjectController extends Controller
         //add the inserted data in a Project's istance
         $project = Project::create($data);
 
+        //uses the function attach of method technologies of the Project model to create a record in the 
+        //pivot table between projects and technologies with value the respective ids
+        $project->technologies()->attach($data['technologies']);
+
         return redirect()->route("admin.projects.show", $project->title);
     }
 
@@ -64,8 +73,13 @@ class ProjectController extends Controller
         //search in the database the first element with the same slug as the input
         $project = Project::where("slug", $slug)->first();
 
+        //searches in the table of the types all the records
         $types = Type::all();
-        return view("admin.projects.create", ["types" => $types]);
+
+        //searches in the table of the technologies all the records
+        $technologies = Technology::all();
+
+        return view("admin.projects.edit", compact('project', 'types', 'technologies'));
     }
 
     public function update(UpsertProjectRequest $request, string $slug): RedirectResponse
@@ -81,17 +95,20 @@ class ProjectController extends Controller
             $data["slug"] = $this->generateSlug($data["title"]);
         }
 
-        //if the thumb is set, it deletes the thumb, if it's not set it doesn't block the flow
-        if ($project->thumb) {
-            Storage::delete($project->thumb);
-        }
-
         //checks if $data["thumb"] has been set, because if $data["thumb"] has not been inserted in the form there is an error 
         if (isset($data["thumb"])) {
             //updates the thumb
             $projectImage = Storage::put('projects', $data["thumb"]);
             $data["thumb"] = $projectImage;
         }
+
+        //check if the data is set, if not nothing has to change so it doesn't execute the sync
+        if (isset($data['technologies'])) {
+            //updates in the pivot table between projects and technologies only the data that has been changed in the form
+            //if a data has been unchecked it will be detached and viceversa
+            $project->technologies()->sync($data['technologies']);
+        }
+        
 
         //fill and save the data
         $project->update($data);
@@ -104,13 +121,16 @@ class ProjectController extends Controller
         //search in the database the first element with the same slug as the input
         $project = Project::where("slug", $slug)->first();
 
-        //if the thumb is set, it deletes the thumb, if it's not set it doesn't block the flow
+        //if the thumb is set, it deletes the thumb
         if ($project->thumb) {
             Storage::delete($project->thumb);
         }
 
         //deletes the found project
         $project->delete();
+
+        //detaches all the records in the pivot table relative to the project that has been deleted
+        $project->technologies()->detach();
 
         return redirect()->route("admin.projects.index");
     }

@@ -27,7 +27,8 @@ class UpsertProjectRequest extends FormRequest
             'thumb' => 'nullable|image',
             'type_id' => 'exists:types,id',
             'release_date' => 'required|date',
-            'link' => 'url'
+            'link' => 'url',
+            "technologies" => "nullable"
         ];
     }
 }

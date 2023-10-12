@@ -13,16 +13,14 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-
+        
             $table->string("title");
             $table->string("slug")->unique();
             $table->text("description");
             $table->string("thumb")->nullable();
-            $table->unsignedBigInteger('type_id')->nullable();
-            $table->foreign('type_id')->references('id')->on("projects");
             $table->date("release_date");
             $table->string("link");
-
+        
             $table->timestamps();
         });
     }

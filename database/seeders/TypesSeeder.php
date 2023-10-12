@@ -19,7 +19,6 @@ class TypesSeeder extends Seeder
         foreach ($types as $type) {
             $new_type = new Type();
             $new_type->title = $type;
-            $new_type->slug = $type;
             $new_type->save();
         }
     }

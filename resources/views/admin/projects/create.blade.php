@@ -9,7 +9,7 @@
                 @include('admin.projects.forms.upsert', [
                     'action' => route('admin.projects.store'),
                     'method' => 'post',
-                    'project' => null,
+                    'project' => null
                 ])
 
             </div>

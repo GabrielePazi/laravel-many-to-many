@@ -1,22 +1,28 @@
 <div class="card" style="width: 30%">
     <img src="
-        @if (str_contains(asset('/storage/' . $project->thumb), 'projects')) 
-            {{ asset('/storage/' . $project->thumb) }}   
+        @if (str_contains(asset('/storage/' . $project->thumb), 'projects')) {{ asset('/storage/' . $project->thumb) }}   
         @else
-            {{ $project->thumb }}
-        @endif
+            {{ $project->thumb }} @endif
         "
         class="card-img-top" style="height: 150px; object-fit:cover" alt="...">
     <div class="card-body">
 
         {{-- title --}}
         <h5 class="card-title">{{ ucfirst($project->title) }}</h5>
+        <h5><span class="badge bg-primary display-5">{{ $project->type?->title }}</span></h5>
+        
+
+        {{-- technologies --}}
+        @foreach ($project->technologies as $technology)
+            <div class="badge" style="background-color: rgb({{ $technology->color }})">{{ $technology->title }}</div>
+        @endforeach
 
         {{-- description --}}
-        <p class="card-text text-secondary">{{ $project->description }}</p>
+        <p class="card-text text-secondary">{{ ucfirst($project->description) }}</p>
 
         {{-- date --}}
-        <h6>Release: <span class="card-text text-secondary">{{ date('d-m-Y', strtotime($project->release_date)) }}</span>
+        <h6>Release: <span
+                class="card-text text-secondary">{{ date('d-m-Y', strtotime($project->release_date)) }}</span>
         </h6>
 
         {{-- actions --}}

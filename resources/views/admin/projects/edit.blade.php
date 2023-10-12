@@ -8,7 +8,7 @@
 
                 @include('admin.projects.forms.upsert', [
                     'action' => route('admin.projects.update', $project->slug),
-                    'method' => 'patch',
+                    'method' => 'patch'
                 ])
             </div>
         </div>
