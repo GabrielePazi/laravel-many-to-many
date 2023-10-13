@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\TechnologyController;
+use App\Models\Technology;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,24 +26,46 @@ Route::get('/admin', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(["auth", "verified"])
+    ->prefix("admin/")
+    ->name("admin.")
+    ->group(function () {
+
+        //CREATE
+        Route::get("projects/create", [ProjectController::class, "create"])->name("projects.create");
+        Route::post("projects", [ProjectController::class, "store"])->name("projects.store");
+
+        //READ
+        Route::get("projects", [ProjectController::class, "index"])->name("projects.index");
+        Route::get("projects/{project}", [ProjectController::class, "show"])->name("projects.show");
+
+        //UPDATE
+        Route::get("projects/{project}/edit", [ProjectController::class, "edit"])->name("projects.edit");
+        Route::patch("projects/{project}", [ProjectController::class, "update"])->name("projects.update");
+
+        //DELETE
+        Route::delete("projects/{project}", [ProjectController::class, "destroy"])->name("projects.destroy");
+    });
+
+Route::middleware(["auth", "verified"])
     ->prefix("admin")
     ->name("admin.")
     ->group(function () {
 
         //CREATE
-        Route::get("/projects/create", [ProjectController::class, "create"])->name("projects.create");
-        Route::post("/projects", [ProjectController::class, "store"])->name("projects.store");
+        Route::get("/technologies/create", [TechnologyController::class, "create"])->name("technologies.create");
+        Route::post("/technologies", [TechnologyController::class, "store"])->name("technologies.store");
 
         //READ
-        Route::get("/projects", [ProjectController::class, "index"])->name("projects.index");
-        Route::get("/projects/{project}", [ProjectController::class, "show"])->name("projects.show");
+        Route::get("/technologies", [TechnologyController::class, "index"])->name("technologies.index");
+        Route::get("/technologies/{technology}", [TechnologyController::class, "show"])->name("technologies.show");
 
         //UPDATE
-        Route::get("/projects/{project}/edit", [ProjectController::class, "edit"])->name("projects.edit");
-        Route::patch("/projects/{project}", [ProjectController::class, "update"])->name("projects.update");
+        Route::get("/technologies/{technology}/edit", [TechnologyController::class, "edit"])->name("technologies.edit");
+        Route::patch("/technologies/{technology}", [TechnologyController::class, "update"])->name("technologies.update");
 
         //DELETE
-        Route::delete("/projects/{project}", [ProjectController::class, "destroy"])->name("projects.destroy");
+        Route::delete("/technologies/{technology}", [TechnologyController::class, "destroy"])->name("technologies.destroy");
     });
+    
 
 require __DIR__ . '/auth.php';
