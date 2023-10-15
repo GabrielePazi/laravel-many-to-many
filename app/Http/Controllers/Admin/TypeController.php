@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Type;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Technology;
 
-use function Laravel\Prompts\error;
-
-class TechnologyController extends Controller
+class TypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $technologies = Technology::all();
+        $types = Type::all();
 
-        return view('admin.technologies.index', compact('technologies'));
+        return view('admin.types.index', compact('types'));
     }
 
     /**
@@ -25,7 +23,7 @@ class TechnologyController extends Controller
      */
     public function create()
     {
-        return view('admin.technologies.create');
+        return view('admin.types.create');
     }
 
     /**
@@ -34,13 +32,12 @@ class TechnologyController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        
+
         $data["slug"] = $this->generateSlug($data["title"]);
-        $data["color"] = implode(",", sscanf($data["color"], "#%02x%02x%02x"));
 
-        Technology::create($data);
+        Type::create($data);
 
-        return redirect(route('admin.technologies.index'));
+        return redirect(route('admin.types.index'));
     }
 
     /**
@@ -48,8 +45,8 @@ class TechnologyController extends Controller
      */
     public function show(string $slug)
     {
-        $technology = Technology::where('slug', $slug)->first();
-        return view('admin.technologies.show', compact('technology'));
+        $type = Type::where('slug', $slug)->first();
+        return view('admin.types.show', compact('type'));
     }
 
     /**
@@ -57,8 +54,8 @@ class TechnologyController extends Controller
      */
     public function edit(string $slug)
     {
-        $technology = Technology::where('slug', $slug)->first();
-        return view('admin.technologies.edit', compact('technology'));
+        $type = Type::where('slug', $slug)->first();
+        return view('admin.types.edit', compact('type'));
     }
 
     /**
@@ -66,17 +63,15 @@ class TechnologyController extends Controller
      */
     public function update(Request $request, string $slug)
     {
-        $technology = Technology::where('slug', $slug)->first();
+        $type = Type::where('slug', $slug)->first();
 
         $data = $request->all();
 
-        $data["slug"] = $technology["slug"];
+        $data["slug"] = $type["slug"];
 
-        $data["color"] = implode(",", sscanf($data["color"], "#%02x%02x%02x"));
+        $type->update($data);
 
-        $technology->update($data);
-
-        return redirect(route('admin.technologies.show', $technology->slug));
+        return redirect(route('admin.types.show', $type->slug));
     }
 
     /**
@@ -84,13 +79,11 @@ class TechnologyController extends Controller
      */
     public function destroy(string $slug)
     {
-        $technology = Technology::where('slug', $slug)->first();
+        $type = Type::where('slug', $slug)->first();
 
-        $technology->projects()->detach();
-        $technology->delete();
-        
+        $type->delete();
 
-        return redirect(route('admin.technologies.index'));
+        return redirect(route('admin.types.index'));
     }
 
     protected function generateSlug(string $title): string
@@ -107,7 +100,7 @@ class TechnologyController extends Controller
             }
 
             //if it doesn't exist the value is null and the while doesn't begin, else il cycles until it doesn't exist
-            $alreadyExists = Technology::where("slug", $slug)->first();
+            $alreadyExists = Type::where("slug", $slug)->first();
 
             $counter++;
         } while ($alreadyExists);

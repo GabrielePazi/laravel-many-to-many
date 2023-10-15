@@ -126,11 +126,11 @@ class ProjectController extends Controller
             Storage::delete($project->thumb);
         }
 
-        //deletes the found project
-        $project->delete();
-
         //detaches all the records in the pivot table relative to the project that has been deleted
         $project->technologies()->detach();
+
+        //deletes the found project
+        $project->delete();
 
         return redirect()->route("admin.projects.index");
     }
