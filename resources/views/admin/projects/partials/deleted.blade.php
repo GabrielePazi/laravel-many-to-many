@@ -5,8 +5,7 @@
             <div class="col-8">
 
                 <div class="text-end my-3">
-                    <a href=" {{ route('admin.projects.create') }}" class="btn btn-success">Create New Project</a>
-                    <a href=" {{ route('admin.projects.partials.deleted') }}" class="btn btn-danger">Show Deleted Projects</a>
+                    <a href=" {{ route('admin.projects.index') }}" class="btn btn-primary">HomePage</a>
 
                 </div>
                 <div class="cards-container d-flex gap-3 flex-wrap">

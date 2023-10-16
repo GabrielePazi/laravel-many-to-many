@@ -10,7 +10,7 @@
         {{-- title --}}
         <h5 class="card-title">{{ ucfirst($project->title) }}</h5>
         <h5><span class="badge bg-primary display-5">{{ $project->type?->title }}</span></h5>
-        
+
 
         {{-- technologies --}}
         @foreach ($project->technologies as $technology)
@@ -28,7 +28,8 @@
         {{-- actions --}}
         <a href="{{ route('admin.projects.show', $project->slug) }}" class="btn btn-primary w-100 my-2">Details</a>
         <div class="d-flex gap-1 w-100">
-            <a href="{{ route('admin.projects.edit', $project->slug) }}" class="btn btn-warning w-50">Modify</a>
+            <a href="{{ route('admin.projects.edit', $project->slug) }}"
+                class="btn btn-warning w-50">{{ $project->deleted_at == null ? 'Modify' : 'Restore' }}</a>
 
             <form class="w-50" action="{{ route('admin.projects.destroy', $project->slug) }}" method="post">
                 @csrf

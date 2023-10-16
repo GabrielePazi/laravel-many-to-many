@@ -38,7 +38,8 @@
 
                         {{-- Actions --}}
                         <div class="d-flex gap-2 my-4 w-100 justify-content-end">
-                            <a href="{{ route('admin.projects.edit', $project->slug) }}" class="btn btn-warning">Modify</a>
+                            <a href="{{ route('admin.projects.edit', $project->slug) }}"
+                                class="btn btn-warning">{{ $project->deleted_at == null ? 'Modify' : 'Restore' }}</a>
                             <form action="{{ route('admin.projects.destroy', $project->slug) }}" method="post">
                                 @csrf
                                 @method('delete')

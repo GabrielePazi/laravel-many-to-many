@@ -13,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+
 class ProjectController extends Controller
 {
 
@@ -63,7 +64,7 @@ class ProjectController extends Controller
     public function show(string $slug): View
     {
         //search in the database the first element with the same slug as the input
-        $project = Project::where("slug", $slug)->first();
+        $project = Project::withTrashed()->where("slug", $slug)->first();
 
         return view("admin.projects.show", compact("project"));
     }
@@ -71,7 +72,15 @@ class ProjectController extends Controller
     public function edit(string $slug): View
     {
         //search in the database the first element with the same slug as the input
-        $project = Project::where("slug", $slug)->first();
+        $project = Project::withTrashed()->where("slug", $slug)->first();
+
+        if($project['deleted_at']) {
+            $project->restore();
+
+            $projects = Project::all();
+
+            return view("admin.projects.index", compact('projects'));
+        }
 
         //searches in the table of the types all the records
         $types = Type::all();
@@ -119,7 +128,13 @@ class ProjectController extends Controller
     public function destroy(string $slug): RedirectResponse
     {
         //search in the database the first element with the same slug as the input
-        $project = Project::where("slug", $slug)->first();
+        $project = Project::withTrashed()->where("slug", $slug)->first();
+
+        if($project['deleted_at']) {
+            $project->forceDelete();
+
+            return redirect()->route("admin.projects.index");
+        }
 
         //if the thumb is set, it deletes the thumb
         if ($project->thumb) {
@@ -133,6 +148,13 @@ class ProjectController extends Controller
         $project->delete();
 
         return redirect()->route("admin.projects.index");
+    }
+
+    public function indexDeleted(): View
+    {
+        $projects = Project::onlyTrashed()->get();
+
+        return view("admin.projects.partials.deleted", compact("projects"));
     }
 
     protected function generateSlug(string $title): string
