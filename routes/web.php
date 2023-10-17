@@ -35,6 +35,7 @@ Route::middleware(["auth", "verified"])
         Route::post("/projects", [ProjectController::class, "store"])->name("projects.store");
 
         //READ
+        Route::get("/projects/{project}/restore", [ProjectController::class, "restore"])->name("projects.restore");
         Route::get("/projects/deleted", [ProjectController::class, "indexDeleted"])->name("projects.partials.deleted");
         Route::get("/projects", [ProjectController::class, "index"])->name("projects.index");
         Route::get("/projects/{project}", [ProjectController::class, "show"])->name("projects.show");

@@ -24,31 +24,35 @@
                     </div>
 
                     {{-- thumb --}}
-                    <img class="rounded-3" src=" @if (str_contains(asset('/storage/' . $project?->thumb), 'projects')) 
-                        {{ asset('/storage/' . $project?->thumb) }}   
+                    <img class="rounded-3"
+                        src=" @if (str_contains(asset('/storage/' . $project?->thumb), 'projects')) {{ asset('/storage/' . $project?->thumb) }}   
                     @else
-                        {{ $project?->thumb }}
-                    @endif " alt="" width="100%">
+                        {{ $project?->thumb }} @endif "
+                        alt="" width="100%">
 
-                        {{-- description --}}
-                        <div class="my-4">
-                            <h5>Project's Description:</h5>
-                            <p>{{ ucfirst($project->description) }}</p>
-                        </div>
+                    {{-- description --}}
+                    <div class="my-4">
+                        <h5>Project's Description:</h5>
+                        <p>{{ ucfirst($project->description) }}</p>
+                    </div>
 
-                        {{-- Actions --}}
-                        <div class="d-flex gap-2 my-4 w-100 justify-content-end">
-                            <a href="{{ route('admin.projects.edit', $project->slug) }}"
-                                class="btn btn-warning">{{ $project->deleted_at == null ? 'Modify' : 'Restore' }}</a>
-                            <form action="{{ route('admin.projects.destroy', $project->slug) }}" method="post">
-                                @csrf
-                                @method('delete')
+                    {{-- Actions --}}
+                    <div class="d-flex gap-2 my-4 w-100 justify-content-end">
+                        @if ($project->deleted_at == null)
+                            <a href="{{ route('admin.projects.edit', $project->slug) }}" class="btn btn-warning">Modify</a>
+                        @else
+                            <a href="{{ route('admin.projects.restore', $project->slug) }}"
+                                class="btn btn-warning">Restore</a>
+                        @endif
+                        <form action="{{ route('admin.projects.destroy', $project->slug) }}" method="post">
+                            @csrf
+                            @method('delete')
 
-                                <button class="btn btn-danger">Delete</button>
-                            </form>
-                        </div>
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 @endsection
